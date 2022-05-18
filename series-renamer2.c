@@ -16,10 +16,9 @@ int find_special_char(char * dir_name) {
 
     int i = 0;
     while (dir_name[i]) {
-        if ( dir_name[i] == '[' ||
-             isdigit(dir_name[i])  ||
-             dir_name[i] == '(' || 
-             dir_name[i] == '.'         ) {
+        if ( dir_name[i] == '['  ||
+             dir_name[i] == '('  || 
+             dir_name[i] == '.'      ) {
                  return 1;
              }
         i++;
@@ -27,21 +26,46 @@ int find_special_char(char * dir_name) {
     return 0;
 }
 
+void scan_series_dirs(char * path){
 
+    DIR *d;
+    struct dirent *dir;
+    int skip = 2;
+
+    d = opendir(path);
+    if (d) {
+        while ((dir = readdir(d)) != NULL) {
+            if (skip-- > 0)
+                continue;
+
+            printf(" * %s\n", dir->d_name);
+        }
+
+        closedir(d);
+    } else {
+        printf("err\n");
+    }
+}
 
 void scan_base_dir(char * path) {
 
     DIR *d;
     struct dirent *dir;
+    int skip = 2;
+    char buf[MAX_FILENAME];
 
     printf("path: %s\n", path);
     d = opendir(path);
     if (d) {
         while ((dir = readdir(d)) != NULL) {
+            if (skip-- > 0)
+                continue;
             
-            if (find_special_char(dir->d_name)) {
-                printf("%s\n", dir->d_name);
-            }
+            sprintf(buf, "%s\\%s", path, dir->d_name);
+            printf("%s\n", buf);
+            scan_series_dirs(buf);
+            printf("\n");
+
         }
 
         closedir(d);
