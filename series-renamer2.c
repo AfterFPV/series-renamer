@@ -31,11 +31,12 @@ int find_special_char(char * dir_name) {
 int determine_season(char * filename) {
 
     const char* const season_str = "Season";
-    char season[SEASON_ATOI_BUF_SIZE];
+    char season[SEASON_ATOI_BUF_SIZE] = "";
     int i = 0;
     char *pch = NULL;
     int found_digit = 0;
     int season_num = 0;
+
 
     pch = strstr(filename, season_str);
     if (pch) {
@@ -93,14 +94,9 @@ void scan_series_dirs(char * path, char * series_name){
                 }
             } else {
                 season = 0;
-                if (find_special_char(dir->d_name)) {
-                    season = determine_season(dir->d_name);
-                    //printf("    * RENAME: %s\n", dir->d_name);
-                    printf("mv \"%s\\%s\" \"%s\\%s - Season %d\n", series_name, dir->d_name, series_name, series_name, season);
-                }
+                season = determine_season(dir->d_name);
                 
-                
-                //printf("    * %d - %s\n", season, dir->d_name);
+                printf("mv \"%s\\%s\" \"%s\\%s - Season %d\"\n", series_name, dir->d_name, series_name, series_name, season);
             }
 
         }
@@ -145,8 +141,8 @@ int main( int argc, char *argv[] )
     char tmp_dir[MAX_PATH];
 
     
-    scan_base_dir(s_rouse_dir);
-    //scan_base_dir(big_olive_dir);
+    //scan_base_dir(s_rouse_dir);
+    scan_base_dir(big_olive_dir);
     
     
     
