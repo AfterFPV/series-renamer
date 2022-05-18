@@ -2,13 +2,14 @@
 #include <stdio.h>
 #include <dirent.h>
 #include <ctype.h>
+#include <regex.h>
 
 #include "series-renamer2.h"
-
 
 //rename downloaded series in a consistent manner
 //    scan base 'Series' directories 
 //    generate mv scripts
+
 
 
 int find_special_char(char * dir_name) {
@@ -29,7 +30,9 @@ int find_special_char(char * dir_name) {
 #define SEASON_ATOI_BUF_SIZE 3
 #define EAT_FORWARD 3
 int determine_season(char * filename) {
-
+    regex_t regex;
+    int reti;
+    char msgbuf[MAX_FILENAME];
     const char* const season_str = "Season";
     char season[SEASON_ATOI_BUF_SIZE] = "";
     int i = 0;
@@ -67,8 +70,22 @@ int determine_season(char * filename) {
         }
     }
 
+    if (!found_digit){
+        reti = regcomp(&regex, "^a[[:alnum:]]", 0);
+        if (!reti) {
+            printf("NICE!\n");
+        } else  {
+            return 0;
+        }
+
+        /* Free memory allocated to the pattern buffer by regcomp() */
+        regfree(&regex);
+
+    }
+
     return season_num;
 }
+
 
 void scan_series_dirs(char * path, char * series_name){
 
@@ -88,15 +105,20 @@ void scan_series_dirs(char * path, char * series_name){
             if (is_regular_file(buf)) {
                 if (is_movie_file(dir->d_name)) {
                     //printf(" * Movie: %s\n", dir->d_name);
+                    season = 0;
+                    season = determine_season(dir->d_name);
+
+                    if (season != 0)
+                        printf("mkdir \"%s\\%s - Season %d\"", series_name, series_name, season);
                 } else {
-                   // printf(" - RANDOM: %s\n", dir->d_name);
-                   //printf("rm \"%s\"\n", buf); 
+                    //printf(" - RANDOM: %s\n", dir->d_name);
+                    //printf("rm \"%s\"\n", buf); 
                 }
             } else {
-                season = 0;
-                season = determine_season(dir->d_name);
+                //season = 0;
+                //season = determine_season(dir->d_name);
                 
-                printf("mv \"%s\\%s\" \"%s\\%s - Season %d\"\n", series_name, dir->d_name, series_name, series_name, season);
+                //printf("mv \"%s\\%s\" \"%s\\%s - Season %d\"\n", series_name, dir->d_name, series_name, series_name, season);
             }
 
         }
@@ -106,6 +128,7 @@ void scan_series_dirs(char * path, char * series_name){
         printf("err\n");
     }
 }
+
 
 void scan_base_dir(char * path) {
 
@@ -134,18 +157,16 @@ void scan_base_dir(char * path) {
     }
 }
 
+
 int main( int argc, char *argv[] )
 {
     char s_rouse_dir[] = "e:\\User - Consolidated\\Videos\\Series";
     char big_olive_dir[] = "g:\\User_2\\User - Consolidated\\Videos\\Series";
-    char tmp_dir[MAX_PATH];
-
-    
-    //scan_base_dir(s_rouse_dir);
-    scan_base_dir(big_olive_dir);
     
     
-    
+    scan_base_dir(s_rouse_dir);
+    //scan_base_dir(big_olive_dir);
+        
 
 	return 0;
 }
