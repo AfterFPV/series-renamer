@@ -11,6 +11,67 @@
 //    generate mv scripts
 
 
+int load_ep_names(char * series_name) {
+
+    char buf[MAX_PATH];
+    char episode_name[MAX_EPISODE_NAME];
+    FILE * fp;
+    char * line = NULL;
+    size_t len = 0;
+    ssize_t read;
+    int season, episode;
+    int total_season = 0, max_episodes = 0;
+
+
+    sprintf(buf, ".\\csv2\\%s.txt", series_name);
+    if (is_regular_file(buf)) {
+        {
+            printf("FOUND: %s\n", buf);
+            fp = fopen(buf, "r");
+            if (fp == NULL)
+                return 0;
+            
+            while ((read = getline(&line, &len, fp)) != -1) {
+                season = episode = 0;
+                parse_csv_line(&season, &episode, line);
+                if (season > total_season) {
+                    total_season = season;
+                }
+                if (episode > max_episodes) {
+                    max_episodes = episode;
+                }
+            }
+
+            printf("(%d, %d)\n", total_season, max_episodes);
+
+            fclose(fp);
+        }
+
+        {
+            fp = fopen(buf, "r");
+            if (fp == NULL)
+                return 0;
+
+            while ((read = getline(&line, &len, fp)) != -1) {
+                season = episode = 0;
+                episode_name[0] = '\0';
+                
+                tokenize_csv_line(episode_name, &season, &episode, line);
+                //if (season) {
+                    //printf("%dx%02d - %s\n", season, episode, episode_name);
+                //}
+            }
+
+            if (line)
+                free(line);
+        }
+
+        return 1;
+    } else {
+        //printf("NOT FOUND: %s\n", buf);
+        return 0;
+    }
+}
 
 void scan_episodes(char * path, int season_num, struct MySeries *cur_series) {
 
@@ -116,14 +177,18 @@ void scan_series_base_dir(char * path) {
             if (skip-- > 0)
                 continue;
             
-            s = malloc(sizeof(struct MySeries));
-            strcpy(s->series_name, dir->d_name);
-            sprintf(buf, "%s\\%s", path, dir->d_name);
-            
-            // The Good Place
-            // printf("    * %s\n", dir->d_name);
-            scan_series_dirs_for_seasons(buf, s);
-            free(s);
+            if (load_ep_names(dir->d_name)) {
+                continue;
+                s = malloc(sizeof(struct MySeries));
+                clear_series(s);
+                strcpy(s->series_name, dir->d_name);
+                sprintf(buf, "%s\\%s", path, dir->d_name);
+                
+                // The Good Place
+                // printf("    * %s\n", dir->d_name);
+                scan_series_dirs_for_seasons(buf, s);
+                free(s);
+            }
         }
 
         closedir(d);

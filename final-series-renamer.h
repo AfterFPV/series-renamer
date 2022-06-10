@@ -8,6 +8,8 @@
 #define MAX_PATH 4098
 #define MAX_EXTENSION 16
 
+#define MAX_EPISODE_NAME 512
+
 struct MySeries {
     char series_name[MAX_FILENAME];                     // F1 - Drive To Survive
     char series_abbreviation[MAX_FILENAME];             // F1 - Drive To Survive
@@ -50,7 +52,7 @@ void print_mv(struct MySeries *cur_series, struct MyFile *cur_file)
 
     sprintf(left_file, "%s\\%s", cur_file->full_season_folder_path, cur_file->original_filename);
     //printf("left_file: %s\n", left_file);
-    sprintf(right_file, "%s\\%s - S%dE%02d - %s.%s", cur_file->full_season_folder_path, cur_series->series_abbreviation, cur_file->season_num, cur_file->episode_num, cur_file->episode_name, cur_file->extension);
+    sprintf(right_file, "%s\\%s - %dx%02d - %s.%s", cur_file->full_season_folder_path, (cur_series->series_abbreviation[0]) ? cur_series->series_abbreviation: cur_series->series_name, cur_file->season_num, cur_file->episode_num, cur_file->episode_name, cur_file->extension);
     //printf("right_file: %s\n", right_file);
 
     printf("mv \"%s\" \"%s\"\n", left_file, right_file);
@@ -259,4 +261,47 @@ void parse_season_and_episode(int * season_ret, int * episode_ret, char * filena
     //printf("                * Fail\n");
 
     return;
+}
+
+
+void parse_csv_line(int * season_ret, int * episode_ret, char * line) 
+{
+    const char s[2] = ",";
+    char *token;
+    int index_num = 0;
+    
+    /* get the first token */
+    token = strtok(line, s);
+    index_num = atoi(token);
+
+    if (index_num != 0) {
+        token = strtok(NULL, s);
+        *season_ret = atoi(token);
+        token = strtok(NULL, s);
+        *episode_ret = atoi(token);
+    }
+}
+
+
+void tokenize_csv_line(char * episode_name, int * season_ret, int * episode_ret, char * line) 
+{
+    const char s[2] = ",";
+    const char t[2] = "\"";
+    char *token;
+    int index_num = 0;
+    
+    /* get the first token */
+    token = strtok(line, s);
+    index_num = atoi(token);
+
+    if (index_num != 0) {
+        token = strtok(NULL, s);
+        *season_ret = atoi(token);
+        token = strtok(NULL, s);
+        *episode_ret = atoi(token);
+        token = strtok(NULL, s);
+        token = strtok(NULL, t);
+        strcpy(episode_name, token);
+        printf("%d - %dx%02d - %s\n", index_num, *season_ret, *episode_ret, episode_name);
+    }
 }
