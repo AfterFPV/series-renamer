@@ -10,6 +10,8 @@
 //    scan base 'Series' directories 
 //    generate mv scripts
 
+char dictionary[MAX_SERIES][MAX_EPISODES][MAX_EPISODE_NAME];
+
 
 int load_ep_names(char * series_name) {
 
@@ -48,6 +50,8 @@ int load_ep_names(char * series_name) {
         }
 
         {
+            clear_dictionary();
+
             fp = fopen(buf, "r");
             if (fp == NULL)
                 return 0;
@@ -57,9 +61,11 @@ int load_ep_names(char * series_name) {
                 episode_name[0] = '\0';
                 
                 tokenize_csv_line(episode_name, &season, &episode, line);
-                //if (season) {
-                    //printf("%dx%02d - %s\n", season, episode, episode_name);
-                //}
+                
+                if (season) {
+                    strcpy(dictionary[season][episode], episode_name);
+                    printf("%dx%02d - %s\n", season, episode, episode_name);
+                }
             }
 
             if (line)
@@ -109,6 +115,7 @@ void scan_episodes(char * path, int season_num, struct MySeries *cur_series) {
 
                         f->episode_num = episode_num;
                         f->season_num = season_num2;
+                        strcpy(f->episode_name, dictionary[season_num2][episode_num]);
 
                         print_mv(cur_series, f);
                     } else {
@@ -178,7 +185,7 @@ void scan_series_base_dir(char * path) {
                 continue;
             
             if (load_ep_names(dir->d_name)) {
-                continue;
+                //continue;
                 s = malloc(sizeof(struct MySeries));
                 clear_series(s);
                 strcpy(s->series_name, dir->d_name);

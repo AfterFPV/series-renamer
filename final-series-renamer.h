@@ -8,7 +8,22 @@
 #define MAX_PATH 4098
 #define MAX_EXTENSION 16
 
+#define MAX_SERIES 36
+#define MAX_EPISODES 50
 #define MAX_EPISODE_NAME 512
+
+
+extern char dictionary[MAX_SERIES][MAX_EPISODES][MAX_EPISODE_NAME];
+
+void clear_dictionary() {
+    int i, j;
+
+    for (i = 0; i < MAX_SERIES; i++) {
+        for (j = 0; j < MAX_EPISODES; j++) {
+            dictionary[i][j][0] = '\0';
+        }
+    }
+}
 
 struct MySeries {
     char series_name[MAX_FILENAME];                     // F1 - Drive To Survive
@@ -21,7 +36,7 @@ struct MyFile {
     char original_filename[MAX_FILENAME];         // Formula.1.Drive.to.Survive.S01E07.WEBRip.x264-ION10.mp4
     int season_num;                               // 1
     int episode_num;                              // 7
-    char episode_name[MAX_PATH];                  // Keeping Your Head
+    char episode_name[MAX_EPISODE_NAME];          // Keeping Your Head
     char extension[MAX_EXTENSION];                // mp4
 } ;
 
@@ -302,6 +317,6 @@ void tokenize_csv_line(char * episode_name, int * season_ret, int * episode_ret,
         token = strtok(NULL, s);
         token = strtok(NULL, t);
         strcpy(episode_name, token);
-        printf("%d - %dx%02d - %s\n", index_num, *season_ret, *episode_ret, episode_name);
+        //printf("%d - %dx%02d - %s\n", index_num, *season_ret, *episode_ret, episode_name);
     }
 }
