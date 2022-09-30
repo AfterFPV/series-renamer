@@ -28,7 +28,7 @@ int load_ep_names(char * series_name) {
     sprintf(buf, ".\\csv2\\%s.txt", series_name);
     if (is_regular_file(buf)) {
         {
-            printf("FOUND: %s\n", buf);
+            //printf("FOUND: %s\n", buf);
             fp = fopen(buf, "r");
             if (fp == NULL)
                 return 0;
@@ -44,7 +44,7 @@ int load_ep_names(char * series_name) {
                 }
             }
 
-            printf("(%d, %d)\n", total_season, max_episodes);
+            //printf("(%d, %d)\n", total_season, max_episodes);
 
             fclose(fp);
         }
@@ -64,7 +64,7 @@ int load_ep_names(char * series_name) {
                 
                 if (season) {
                     strcpy(dictionary[season][episode], episode_name);
-                    printf("%dx%02d - %s\n", season, episode, episode_name);
+                    //printf("%dx%02d - %s\n", season, episode, episode_name);
                 }
             }
 
@@ -110,9 +110,14 @@ void scan_episodes(char * path, int season_num, struct MySeries *cur_series) {
 
                     // The.Good.Place.S01E01.Pilot.720p.WEB.x264-[MULVAcoded].mkv
                     // printf("            * %s\n", dir->d_name);
+                    season_num2 = 0;
+                    episode_num = 0;
                     parse_season_and_episode(&season_num2, &episode_num, dir->d_name);
-                    if (episode_num != 0 && season_num2 !=0 && season_num2 == season_num) {
+                    if (season_num2 == 0)
+                            season_num2 = season_num;
 
+                    if (episode_num != 0 && season_num2 == season_num) {
+                        
                         f->episode_num = episode_num;
                         f->season_num = season_num2;
                         strcpy(f->episode_name, dictionary[season_num2][episode_num]);
@@ -211,8 +216,8 @@ int main( int argc, char *argv[] )
     char big_olive_dir[] = "g:\\User_2\\User - Consolidated\\Videos\\Series";
     
     printf("Starting Scan: \'%s\'\n", s_rouse_dir);
-    scan_series_base_dir(s_rouse_dir);
-    //scan_base_dir(big_olive_dir);
+    //scan_series_base_dir(s_rouse_dir);
+    scan_series_base_dir(big_olive_dir);
     
     printf("\nDone\n\n\n");
 
