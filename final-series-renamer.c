@@ -25,7 +25,7 @@ int load_ep_names(char * series_name) {
     int total_season = 0, max_episodes = 0;
 
 
-    sprintf(buf, ".\\csv2\\%s.txt", series_name);
+    sprintf(buf, ".\\csv4\\%s.txt", series_name);
     if (is_regular_file(buf)) {
         {
             //printf("FOUND: %s\n", buf);
@@ -213,11 +213,13 @@ void scan_series_base_dir(char * path) {
 int main( int argc, char *argv[] )
 {
     char s_rouse_dir[] = "e:\\User - Consolidated\\Videos\\Series";
+    char e_davis_dir[] = "f:\\s2mccaffr\\Videos\\Series";
     char big_olive_dir[] = "g:\\User_2\\User - Consolidated\\Videos\\Series";
     
     printf("Starting Scan: \'%s\'\n", s_rouse_dir);
     //scan_series_base_dir(s_rouse_dir);
-    scan_series_base_dir(big_olive_dir);
+    scan_series_base_dir(e_davis_dir);
+    //scan_series_base_dir(big_olive_dir);
     
     printf("\nDone\n\n\n");
 

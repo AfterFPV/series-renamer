@@ -69,8 +69,8 @@ void print_mv(struct MySeries *cur_series, struct MyFile *cur_file)
     //printf("left_file: %s\n", left_file);
     sprintf(right_file, "%s\\%s - %dx%02d - %s.%s", cur_file->full_season_folder_path, (cur_series->series_abbreviation[0]) ? cur_series->series_abbreviation: cur_series->series_name, cur_file->season_num, cur_file->episode_num, cur_file->episode_name, cur_file->extension);
     //printf("right_file: %s\n", right_file);
-
-    printf("mv \"%s\" \"%s\"\n", left_file, right_file);
+    if (strcmp(left_file, right_file))
+        printf("mv \"%s\" \"%s\"\n", left_file, right_file);
 
 }
 
