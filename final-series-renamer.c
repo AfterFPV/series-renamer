@@ -212,14 +212,14 @@ void scan_series_base_dir(char * path) {
 
 int main( int argc, char *argv[] )
 {
-    char s_rouse_dir[] = "e:\\User - Consolidated\\Videos\\Series";
-    char e_davis_dir[] = "f:\\s2mccaffr\\Videos\\Series";
-    char big_olive_dir[] = "g:\\User_2\\User - Consolidated\\Videos\\Series";
-    
-    printf("Starting Scan: \'%s\'\n", s_rouse_dir);
-    //scan_series_base_dir(s_rouse_dir);
-    scan_series_base_dir(e_davis_dir);
-    //scan_series_base_dir(big_olive_dir);
+    char big_davis_dir[] = "d:\\s2mccaffr\\Videos\\Series";
+    char e_davis_dir[] = "e:\\s2mccaffr\\Videos\\Series";
+    char extreme_ssd[] = "f:\\Videos\\Series";
+    char s_rouse_dir[] = "g:\\User_2\\User - Consolidated\\Videos\\Series";
+
+
+    printf("Starting Scan: \'%s\'\n", big_davis_dir);
+    scan_series_base_dir(big_davis_dir);
     
     printf("\nDone\n\n\n");
 
