@@ -4,7 +4,7 @@
 #include <ctype.h>
 #include <regex.h>
 
-#include "final-series-renamer.h"
+#include "series-renamer.h"
 
 //rename downloaded series in a consistent manner
 //    scan base 'Series' directories 
@@ -13,7 +13,7 @@
 char dictionary[MAX_SERIES][MAX_EPISODES][MAX_EPISODE_NAME];
 
 
-int load_ep_names(char * series_name) {
+int load_ep_names(char * series_name, char * mode) {
 
     char buf[MAX_PATH];
     char episode_name[MAX_EPISODE_NAME];
@@ -25,7 +25,7 @@ int load_ep_names(char * series_name) {
     int total_season = 0, max_episodes = 0;
 
 
-    sprintf(buf, ".\\csv4\\%s.txt", series_name);
+    sprintf(buf, ".\\%s\\%s.txt", mode, series_name);
     if (is_regular_file(buf)) {
         {
             //printf("FOUND: %s\n", buf);
@@ -173,7 +173,7 @@ void scan_series_dirs_for_seasons(char * path, struct MySeries *cur_series) {
 }
 
 
-void scan_series_base_dir(char * path) {
+void scan_series_base_dir(char * path, char * mode) {
 
     DIR *d;
     struct dirent *dir;
@@ -189,7 +189,7 @@ void scan_series_base_dir(char * path) {
             if (skip-- > 0)
                 continue;
             
-            if (load_ep_names(dir->d_name)) {
+            if (load_ep_names(dir->d_name, mode)) {
                 //continue;
                 s = malloc(sizeof(struct MySeries));
                 clear_series(s);
@@ -217,9 +217,11 @@ int main( int argc, char *argv[] )
     char extreme_ssd[] = "f:\\Videos\\Series";
     char s_rouse_dir[] = "g:\\User_2\\User - Consolidated\\Videos\\Series";
 
+    char scan_mode_all[] = "csv_all";
+    char scan_mode_cur[] = "csv_cur";
 
-    printf("Starting Scan: \'%s\'\n", big_davis_dir);
-    scan_series_base_dir(big_davis_dir);
+    printf("Starting Scan of \'%s\' in mode %s\n", big_davis_dir, scan_mode_cur);
+    scan_series_base_dir(big_davis_dir, scan_mode_cur);
     
     printf("\nDone\n\n\n");
 
