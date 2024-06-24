@@ -170,10 +170,7 @@ int find_special_char(char * dir_name) {
 int load_abbreviations()
 {
 
-
-
 }
-
 
 #define SEASON_ATOI_BUF_SIZE 3
 #define EAT_FORWARD 3
@@ -224,7 +221,9 @@ const char* const regex_patterns[] = {
                                         "S([0-9][0-9])E([0-9][0-9])",
                                         "S([0-9])E([0-9][0-9])",
                                         "([0-9]+)x([0-9][0-9])",
-                                        "([0-9]+)e([0-9][0-9])",                                        
+                                        "([0-9]+)e([0-9][0-9])",
+                                        "s([0-9]+)ep([0-9]+)",
+
                                         "([0-9]+)-([0-9][0-9])",
                                         "S([0-9][0-9]) E([0-9][0-9])",
                                         "([0-9]+)([0-9][0-9])",

@@ -190,7 +190,7 @@ void scan_series_base_dir(char * path, char * mode) {
                 continue;
             
             if (load_ep_names(dir->d_name, mode)) {
-                //continue;
+
                 s = malloc(sizeof(struct MySeries));
                 clear_series(s);
                 strcpy(s->series_name, dir->d_name);
@@ -216,6 +216,7 @@ int main( int argc, char *argv[] )
     char e_davis_dir[] = "e:\\s2mccaffr\\Videos\\Series";
     char extreme_ssd[] = "f:\\Videos\\Series";
     char s_rouse_dir[] = "g:\\User_2\\User - Consolidated\\Videos\\Series";
+    char big_book_dir[] = "i:\\s2mccaffr\\Videos\\Series";
 
     char scan_mode_all[] = "csv_all";
     char scan_mode_cur[] = "csv_cur";
