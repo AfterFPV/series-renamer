@@ -182,7 +182,8 @@ void scan_series_base_dir(char * path, char * mode) {
     struct MySeries *s;
 
 
-    //printf("%s\n", path);
+    printf("Starting Scan of \'%s\' in mode %s\n", path, mode);
+
     d = opendir(path);
     if (d) {
         while ((dir = readdir(d)) != NULL) {
@@ -221,8 +222,7 @@ int main( int argc, char *argv[] )
     char scan_mode_all[] = "csv_all";
     char scan_mode_cur[] = "csv_cur";
 
-    printf("Starting Scan of \'%s\' in mode %s\n", big_davis_dir, scan_mode_cur);
-    scan_series_base_dir(big_davis_dir, scan_mode_cur);
+    scan_series_base_dir(extreme_ssd, scan_mode_cur);
     
     printf("\nDone\n\n\n");
 
