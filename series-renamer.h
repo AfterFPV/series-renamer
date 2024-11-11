@@ -111,8 +111,9 @@ void get_extension(char *extension_ret, const char *filename)
     char *p = NULL;
 
     p = strrchr(filename, '.');
-
-    strcpy(extension_ret, p + 1);
+    
+    if (p)
+        strcpy(extension_ret, p + 1);
 
 }
 
